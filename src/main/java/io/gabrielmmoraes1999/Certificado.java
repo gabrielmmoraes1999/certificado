@@ -37,13 +37,4 @@ public class Certificado {
         this.setModoMultithreading(false);
     }
 
-    @Override
-    public String toString() {
-        return "Certificado{" +
-                "nome='" + nome + '\'' +
-                ", dataHoraVencimento=" + dataHoraVencimento +
-                ", cnpjCpf='" + cnpjCpf + '\'' +
-                ", tipoCertificado=" + tipoCertificado +
-                '}';
-    }
 }
