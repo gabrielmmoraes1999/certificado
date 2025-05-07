@@ -6,7 +6,31 @@
 
     <groupId>io.gabrielmmoraes1999</groupId>
     <artifactId>certificado</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+
+    <name>certificado</name>
+    <description>Gerenciador de certificado digital.</description>
+    <url>https://github.com/gabrielmmoraes1999/certificado</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Gabriel Moraes</name>
+            <email>gabrielmmoraes1999@icloud.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/gabrielmmoraes1999/certificado.git</connection>
+        <developerConnection>scm:git:ssh://github.com:gabrielmmoraes1999/certificado.git</developerConnection>
+        <url>http://github.com/gabrielmmoraes1999/certificado/tree/master</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
