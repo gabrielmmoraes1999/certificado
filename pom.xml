@@ -8,7 +8,7 @@
     <artifactId>certificado</artifactId>
     <version>1.0</version>
 
-    <name>certificado</name>
+    <name>Certificado</name>
     <description>Gerenciador de certificado digital.</description>
     <url>https://github.com/gabrielmmoraes1999/certificado</url>
 
@@ -43,18 +43,6 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.3.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>1.24</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
