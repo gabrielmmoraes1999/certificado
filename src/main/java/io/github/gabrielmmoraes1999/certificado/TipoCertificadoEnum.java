@@ -1,4 +1,4 @@
-package io.github.gabrielmmoraes1999.cert;
+package io.github.gabrielmmoraes1999.certificado;
 
 import lombok.Getter;
 

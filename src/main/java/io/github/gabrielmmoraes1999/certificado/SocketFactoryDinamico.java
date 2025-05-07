@@ -1,4 +1,4 @@
-package io.github.gabrielmmoraes1999.cert;
+package io.github.gabrielmmoraes1999.certificado;
 
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;

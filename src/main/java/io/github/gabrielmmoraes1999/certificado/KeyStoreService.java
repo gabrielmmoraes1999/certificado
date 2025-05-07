@@ -1,6 +1,6 @@
-package io.github.gabrielmmoraes1999.cert;
+package io.github.gabrielmmoraes1999.certificado;
 
-import io.github.gabrielmmoraes1999.cert.exception.CertificadoException;
+import io.github.gabrielmmoraes1999.certificado.exception.CertificadoException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

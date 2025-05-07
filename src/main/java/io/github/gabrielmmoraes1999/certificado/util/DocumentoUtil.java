@@ -1,4 +1,4 @@
-package io.github.gabrielmmoraes1999.cert.util;
+package io.github.gabrielmmoraes1999.certificado.util;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
