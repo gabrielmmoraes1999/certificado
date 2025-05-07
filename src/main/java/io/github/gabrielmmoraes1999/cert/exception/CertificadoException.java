@@ -1,4 +1,4 @@
-package io.gabrielmmoraes1999.exception;
+package io.github.gabrielmmoraes1999.cert.exception;
 
 public class CertificadoException extends Exception {
 

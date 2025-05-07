@@ -1,4 +1,4 @@
-package io.gabrielmmoraes1999;
+package io.github.gabrielmmoraes1999.cert;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;

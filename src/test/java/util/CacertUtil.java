@@ -1,4 +1,4 @@
-package io.gabrielmmoraes1999.util;
+package util;
 
 import javax.net.ssl.*;
 import java.io.*;
