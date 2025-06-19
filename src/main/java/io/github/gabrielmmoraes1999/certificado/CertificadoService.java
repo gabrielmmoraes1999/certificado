@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
@@ -85,6 +87,7 @@ public class CertificadoService {
         certificado.setNumeroSerie(certificate.getSerialNumber());
         certificado.setIssuer(extractCN(certificate.getIssuerDN().getName()));
         certificado.setSubject(extractCN(certificate.getSubjectDN().getName()));
+        certificado.setCertificate(certificate);
     }
 
     public static Certificado certificadoPfx(String caminhoCertificado, String senha) throws CertificadoException, FileNotFoundException {
@@ -308,4 +311,5 @@ public class CertificadoService {
             return null;
         }
     }
+
 }

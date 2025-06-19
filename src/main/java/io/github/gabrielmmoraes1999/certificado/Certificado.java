@@ -5,8 +5,11 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.security.Provider;
+import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Getter
 @Setter
@@ -31,10 +34,31 @@ public class Certificado {
     private boolean isModoMultithreading;
     private String issuer;
     private String subject;
+    private X509Certificate certificate;
 
     public Certificado() {
         this.setSslProtocol(TLSV_1_2);
         this.setModoMultithreading(false);
     }
 
+    public String extractCommonName(String dn, boolean subject) {
+        String commonName;
+
+        if (subject) {
+            commonName = certificate.getSubjectDN().getName();
+        } else {
+            commonName = certificate.getIssuerDN().getName();
+        }
+
+        Pattern pattern = Pattern.compile("(\\w+)=\\s*\"?([^,]+)\"?");
+        Matcher matcher = pattern.matcher(commonName);
+
+        while (matcher.find()) {
+            if (dn.equals(matcher.group(1))) {
+                return matcher.group(2);
+            }
+        }
+
+        return null;
+    }
 }
