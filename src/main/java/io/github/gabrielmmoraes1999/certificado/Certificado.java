@@ -18,14 +18,14 @@ public class Certificado {
 
     private static final String TLSV_1_2 = "TLSv1.2";
 
-    private String nome;
+    private String nomeCertificado;
     private LocalDate vencimento;
     private LocalDateTime dataHoraVencimento;
     private Long diasRestantes;
     private String arquivo;
     private byte[] arquivoBytes;
     private String senha;
-    private String cnpjCpf;
+    private String inscricaoCertificado;
     private TipoCertificadoEnum tipoCertificado;
     private boolean valido;
     private String sslProtocol;
@@ -35,6 +35,8 @@ public class Certificado {
     private String issuer;
     private String subject;
     private X509Certificate certificate;
+    private String nomePessoaFisica;
+    private String inscricaoPessoaFisica;
 
     public Certificado() {
         this.setSslProtocol(TLSV_1_2);

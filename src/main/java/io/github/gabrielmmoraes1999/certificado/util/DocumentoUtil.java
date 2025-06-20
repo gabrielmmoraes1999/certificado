@@ -17,13 +17,50 @@ public class DocumentoUtil {
     private static final int CNPJ_OFFSET = 6;
     private static final int CNPJ_LENGTH = 25;
 
+    private static final byte[] NOME_PESSOA_FISICA_INDICATOR = new byte[]{6, 5, 96, 76, 1 ,3, 2};
+    private static final byte[] INSCRICAO_PESSOA_FISICA_INDICATOR = new byte[]{6, 5, 96, 76, 1 ,3, 4};
+    private static final int NOME_PESSOA_FISICA_OFFSET = 11;
+    private static final int INSCRICAO_PESSOA_FISICA_OFFSET = 19;
+
 
     public static Optional<String> getDocumentoFromCertificado(byte[] extensionValue) {
         String valor = new String(extensionValue);
+        processaNomePF(extensionValue);
+
         return Optional.ofNullable(
                 processaCNPJ(valor)
                         .orElse(processaCPF(valor)
                                 .orElse(null)));
+    }
+
+    public static Optional<String> processaCPFPJ(byte[] extensionValue) {
+        int index = findSequence(extensionValue, INSCRICAO_PESSOA_FISICA_INDICATOR);
+
+        if (index != -1) {
+            return validarDocumento(
+                    new String(getBytes(
+                            extensionValue,
+                            index + INSCRICAO_PESSOA_FISICA_OFFSET,
+                            index + INSCRICAO_PESSOA_FISICA_OFFSET + CPF_LENGTH
+                    ))
+            );
+        }
+
+        return Optional.empty();
+    }
+
+    public static Optional<String> processaNomePF(byte[] extensionValue) {
+        int index = findSequence(extensionValue, NOME_PESSOA_FISICA_INDICATOR);
+        int size = extensionValue[index + NOME_PESSOA_FISICA_OFFSET - 1];
+
+        if (index != -1) {
+            return Optional.of(new String(getBytes(
+                    extensionValue,
+                    index + NOME_PESSOA_FISICA_OFFSET,
+                    index + NOME_PESSOA_FISICA_OFFSET + size
+            )));
+        }
+        return Optional.empty();
     }
 
     private static Optional<String> processaCPF(String extensionValue) {
@@ -64,5 +101,38 @@ public class DocumentoUtil {
         }
 
         return Optional.empty();
+    }
+
+    public static int findSequence(byte[] array, byte[] sequence) {
+        if (array.length < sequence.length) {
+            return -1;
+        }
+
+        for (int i = 0; i <= array.length - sequence.length; i++) {
+            boolean match = true;
+
+            for (int j = 0; j < sequence.length; j++) {
+                if (array[i + j] != sequence[j]) {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static byte[] getBytes(byte[] array, int beginIndex, int endIndex) {
+        if (beginIndex < 0 || endIndex >= array.length || beginIndex > endIndex) {
+            throw new IllegalArgumentException("Índices inválidos");
+        }
+
+        byte[] result = new byte[endIndex - beginIndex];
+        System.arraycopy(array, beginIndex, result, 0, result.length);
+        return result;
     }
 }

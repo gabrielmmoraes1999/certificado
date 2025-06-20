@@ -20,8 +20,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
@@ -71,11 +69,11 @@ public class CertificadoService {
             keyStore = getKeyStore(certificado);
             Enumeration<String> aliasEnum = keyStore.aliases();
             String aliasKey = aliasEnum.nextElement();
-            certificado.setNome(aliasKey);
+            certificado.setNomeCertificado(aliasKey);
         }
 
         X509Certificate certificate = getCertificate(certificado, keyStore);
-        certificado.setCnpjCpf(
+        certificado.setInscricaoCertificado(
                 Optional.ofNullable(certificate.getExtensionValue("2.5.29.17"))
                         .flatMap(DocumentoUtil::getDocumentoFromCertificado)
                         .orElse(""));
@@ -88,15 +86,21 @@ public class CertificadoService {
         certificado.setIssuer(extractCN(certificate.getIssuerDN().getName()));
         certificado.setSubject(extractCN(certificate.getSubjectDN().getName()));
         certificado.setCertificate(certificate);
+        certificado.setInscricaoPessoaFisica(
+                Optional.ofNullable(certificate.getExtensionValue("2.5.29.17"))
+                        .flatMap(DocumentoUtil::processaCPFPJ)
+                        .orElse(null));
+        certificado.setNomePessoaFisica(
+                Optional.ofNullable(certificate.getExtensionValue("2.5.29.17"))
+                        .flatMap(DocumentoUtil::processaNomePF)
+                        .orElse(null));
     }
 
     public static Certificado certificadoPfx(String caminhoCertificado, String senha) throws CertificadoException, FileNotFoundException {
 
         if (!Files.exists(Paths.get(
                 Optional.ofNullable(caminhoCertificado).orElseThrow(() -> new IllegalArgumentException("Caminho do Certificado não pode ser nulo.")))))
-            throw new FileNotFoundException("Arquivo " +
-                    caminhoCertificado +
-                    " não existe");
+            throw new FileNotFoundException("Arquivo " + caminhoCertificado + " não existe");
 
         Certificado certificado = new Certificado();
 
@@ -124,8 +128,7 @@ public class CertificadoService {
             return certificado;
 
         } catch (Exception e) {
-            throw new CertificadoException(ERRO_AO_CARREGAR_INFORMACOES_DO_CERTIFICADO +
-                    e.getMessage(), e);
+            throw new CertificadoException(ERRO_AO_CARREGAR_INFORMACOES_DO_CERTIFICADO + e.getMessage(), e);
         }
 
     }
@@ -159,7 +162,7 @@ public class CertificadoService {
                 if (aliasKey != null) {
                     Certificado certificado = new Certificado();
                     certificado.setTipoCertificado(tipo);
-                    certificado.setNome(aliasKey);
+                    certificado.setNomeCertificado(aliasKey);
                     setDadosCertificado(certificado, ks);
                     if (listarVencidos) {
                         listaCert.add(certificado);
@@ -190,8 +193,7 @@ public class CertificadoService {
 
             while (aliasEnum.hasMoreElements()) {
                 String aliasKey = aliasEnum.nextElement();
-                if (aliasKey !=
-                        null) {
+                if (aliasKey != null) {
                     listaCert.add(aliasKey);
                 }
             }
@@ -220,7 +222,7 @@ public class CertificadoService {
     public static X509Certificate getCertificate(Certificado certificado, KeyStore keystore) throws CertificadoException {
         try {
 
-            return (X509Certificate) keystore.getCertificate(certificado.getNome());
+            return (X509Certificate) keystore.getCertificate(certificado.getNomeCertificado());
 
         } catch (KeyStoreException e) {
             throw new CertificadoException("Erro Ao pegar X509Certificate: " +
@@ -258,17 +260,16 @@ public class CertificadoService {
     }
 
     public static Certificado getCertificadoByCnpjCpf(String cnpjCpf) throws CertificadoException {
-        return listaCertificadosWindows().stream().filter(cert -> Optional.ofNullable(cert.getCnpjCpf()).orElse("")
+        return listaCertificadosWindows().stream().filter(cert -> Optional.ofNullable(cert.getInscricaoCertificado()).orElse("")
                 .startsWith(cnpjCpf)).findFirst().orElseThrow(() -> new CertificadoException(
-                "Certificado não encontrado com CNPJ/CPF : " +
-                        cnpjCpf));
+                "Certificado não encontrado com CNPJ/CPF : " + cnpjCpf));
     }
 
     private static Protocol getProtocoloCertificado(final Certificado certificado, InputStream cacert) throws CertificadoException {
         try {
             KeyStore keyStore = getKeyStore(
                     Optional.ofNullable(certificado).orElseThrow(() -> new IllegalArgumentException(CERTIFICADO_NAO_PODE_SER_NULO)));
-            SocketFactoryDinamico socketFactory = new SocketFactoryDinamico(keyStore, certificado.getNome(), certificado.getSenha(),
+            SocketFactoryDinamico socketFactory = new SocketFactoryDinamico(keyStore, certificado.getNomeCertificado(), certificado.getSenha(),
                     Optional.ofNullable(cacert).orElseThrow(() -> new IllegalArgumentException("Cacert não pode ser nulo.")),
                     certificado.getSslProtocol());
 
